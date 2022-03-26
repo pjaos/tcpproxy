@@ -6,7 +6,7 @@ AUTHOR         = "Paul Austen"                                                  
 AUTHOR_EMAIL   = "pausten.os@gmail.com"                                         # The email address of the author
 DESCRIPTION    = "A simple TCP proxy server."                                   # A short description of the application
 LICENSE        = "MIT License"                                                  # The License that the application is distributed under
-REQUIRED_LIBS  = ["p3lib"]                                                             # A python list of required libs (optionally including versions)
+REQUIRED_LIBS  = ["p3lib"]                                                      # A python list of required libs (optionally including versions)
 
 with open("README.md", "r") as fh:
     long_description = fh.read()

@@ -1,0 +1,4 @@
+dist/
+doc/
+packages/
+tcpproxy.egg-info/
