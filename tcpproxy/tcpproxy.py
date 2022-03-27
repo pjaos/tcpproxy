@@ -347,7 +347,7 @@ class TCPProxy(object):
         if self._options.debug:
             argString = argString + " --debug"
 
-        bootManager.add(user=self._options.user, argString=argString)
+        bootManager.add(user=self._options.user, argString=argString, enableSyslog=True)
         self._uio.info("Enabled auto start")
         
     def disableAutoStart(self):
@@ -375,7 +375,7 @@ def main():
         parser.add_argument("-u", "--user",               help="Set the user for auto start.")
         parser.add_argument("-e", "--enable_auto_start",  help="Enable auto start this program when this computer starts.", action="store_true", default=False)
         parser.add_argument("-d", "--disable_auto_start", help="Disable auto start this program when this computer starts.", action="store_true", default=False)
-        parser.add_argument("-s", "--check_status",       help="Check the status of an auto started ydev instance.", action="store_true", default=False)
+        parser.add_argument("-s", "--check_status",       help="Check the status of an auto started tcpproxy instance.", action="store_true", default=False)
         parser.add_argument("--debug",                    help="Enable debugging.", action='store_true')
 
         options = parser.parse_args()
