@@ -6,10 +6,12 @@ import argparse
 import socket
 
 from   time import sleep, time
-from   p3lib.uio import UIO
-from   p3lib.helper import logTraceBack, getHomePath, saveDict, getDict
 from   subprocess import Popen, PIPE
 from   threading import Thread
+
+from   p3lib.uio import UIO
+from   p3lib.helper import logTraceBack, getHomePath, saveDict, getDict
+from   p3lib.boot_manager import BootManager
 
 class ProxyConfig(object):
     """@brief Responsible for managing the persistent proxy configuration."""
@@ -335,6 +337,33 @@ class TCPProxy(object):
         """@brief Allow user to change the persistent proxy configuration."""
         self._proxyConfig.config()
 
+    def enableAutoStart(self):
+        """@brief Enable this program to auto start when the computer on which it is installed starts."""
+        bootManager = BootManager()
+        if not self._options.user:
+            raise Exception("--user not set.")
+
+        argString = ""
+        if self._options.debug:
+            argString = argString + " --debug"
+
+        bootManager.add(user=self._options.user, argString=argString)
+        self._uio.info("Enabled auto start")
+        
+    def disableAutoStart(self):
+        """@brief Enable this program to auto start when the computer on which it is installed starts."""
+        bootManager = BootManager()
+        bootManager.remove()
+        self._uio.info("Disabled auto start")
+
+    def checkAutoStartStatus(self):
+        """@brief Check the status of a process previously set to auto start."""
+        bootManager = BootManager()
+        lines = bootManager.getStatus()
+        if lines and len(lines) > 0:
+            for line in lines:
+                self._uio.info(line)
+                
 def main():
     """@brief Program entry point"""
     uio = UIO()
@@ -342,8 +371,12 @@ def main():
     try:
         parser = argparse.ArgumentParser(description="This program provides a simple proxy server.\n",
                                          formatter_class=argparse.RawDescriptionHelpFormatter)
-        parser.add_argument("-c", "--config",  action='store_true', help="Enable debugging.")
-        parser.add_argument("-d", "--debug",   action='store_true', help="Enable debugging.")
+        parser.add_argument("-c", "--config",             help="Configure the TCP proxy server.", action='store_true')
+        parser.add_argument("-u", "--user",               help="Set the user for auto start.")
+        parser.add_argument("-e", "--enable_auto_start",  help="Enable auto start this program when this computer starts.", action="store_true", default=False)
+        parser.add_argument("-d", "--disable_auto_start", help="Disable auto start this program when this computer starts.", action="store_true", default=False)
+        parser.add_argument("-s", "--check_status",       help="Check the status of an auto started ydev instance.", action="store_true", default=False)
+        parser.add_argument("--debug",                    help="Enable debugging.", action='store_true')
 
         options = parser.parse_args()
 
@@ -353,6 +386,15 @@ def main():
         if options.config:
             tcpProxy.config()
 
+        elif options.enable_auto_start:
+            tcpProxy.enableAutoStart()
+
+        elif options.disable_auto_start:
+            tcpProxy.disableAutoStart()
+
+        elif options.check_status:
+            tcpProxy.checkAutoStartStatus()
+            
         else:
             tcpProxy.serve()
 

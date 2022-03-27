@@ -5,4 +5,4 @@ Architecture: all
 Essential: no
 Maintainer: Paul Austen <pausten.os@gmail.com>
 Description: A simple TCP proxy server.
-Version: 1.1
+Version: 1.2
