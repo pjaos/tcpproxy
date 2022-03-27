@@ -322,6 +322,10 @@ class TCPProxy(object):
         """@brief Server all TCP connections."""
         proxyAttrList = self._proxyConfig.getProxyAttrList()
         for singleProxyAttr in proxyAttrList:
+            self._uio.info("Forwarding {}:{} to {}:{}".format(singleProxyAttr[0],
+                                                              singleProxyAttr[1],
+                                                              singleProxyAttr[2],
+                                                              singleProxyAttr[3]))
             tcpProxyServer = TCPProxyServer()
             tcpProxyServer.set(self._uio, singleProxyAttr)
             tcpProxyServer.start()
